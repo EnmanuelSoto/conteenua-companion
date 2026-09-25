@@ -1,0 +1,3 @@
+﻿export const CONTEENUA_SUPABASE_URL = 'https://ewbkfbvwrhdadvsfwjzp.supabase.co';
+export const CONTEENUA_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3YmtmYnZ3cmhkYWR2c2Z3anpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMzIxOTUsImV4cCI6MjA2ODgwODE5NX0.9tW7zqt2pNQj7Utgvyd4A5vMQe3oeFa8vPp6o_f1VaE';
+export const CONTEENUA_APP_URL = 'https://app.conteenua.com';

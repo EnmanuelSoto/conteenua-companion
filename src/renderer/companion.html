@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conteenua Companion</title>
+    <link rel="stylesheet" href="./companion.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div class="brand-mark">C</div>
+        <div class="hero-copy">
+          <p class="eyebrow">CONTEENUA COMPANION</p>
+          <h1>Your computer, connected to Conteenua.</h1>
+          <p>Keep repositories and terminal work on this computer while you control normal ChatGPT sessions from Conteenua web or mobile.</p>
+        </div>
+        <span id="cloudPill" class="pill muted">Not signed in</span>
+      </header>
+
+      <section id="signInCard" class="card auth-card">
+        <div>
+          <p class="eyebrow">CONNECT THIS COMPUTER</p>
+          <h2>Sign in with Conteenua</h2>
+          <p class="muted-text">Your Conteenua sign-in is stored with your operating system's secure credential storage. ChatGPT stays signed in separately in your browser.</p>
+        </div>
+        <form id="signInForm" class="auth-form">
+          <label>Email<input id="email" type="email" autocomplete="username" required /></label>
+          <label>Password<input id="password" type="password" autocomplete="current-password" required /></label>
+          <button id="signInButton" class="primary" type="submit">Connect computer</button>
+          <p id="authError" class="error" hidden></p>
+        </form>
+      </section>
+
+      <section id="connectedContent" hidden>
+        <div class="grid two">
+          <article class="card">
+            <div class="card-heading"><div><p class="eyebrow">THIS COMPUTER</p><h2 id="deviceName">Computer</h2></div><span id="deviceOnline" class="pill good">Online</span></div>
+            <dl class="facts">
+              <div><dt>Conteenua account</dt><dd id="accountEmail">—</dd></div>
+              <div><dt>Cloud control</dt><dd id="realtimeState">Connecting…</dd></div>
+              <div><dt>Local tools</dt><dd id="connectorState">Checking…</dd></div>
+              <div><dt>ChatGPT browser</dt><dd id="browserState">Checking…</dd></div>
+            </dl>
+            <div class="button-row"><button id="syncButton" type="button">Sync now</button><button id="openConteenua" class="primary" type="button">Open Conteenua</button></div>
+          </article>
+
+          <article class="card">
+            <div class="card-heading"><div><p class="eyebrow">PERMISSIONS</p><h2>Local access</h2></div><span class="pill warn">Local only</span></div>
+            <p class="muted-text">Conteenua's cloud receives project names, connection state and safe activity summaries. Repository files and local paths stay on this computer.</p>
+            <div id="permissionList" class="permission-list"></div>
+            <p class="fine-print">High-risk actions should still require explicit approval. Conteenua Companion never converts this path into a Conteenua-credit API call.</p>
+          </article>
+        </div>
+
+        <article class="card projects-card">
+          <div class="card-heading">
+            <div><p class="eyebrow">APPROVED PROJECTS</p><h2>Repositories available to your own AI</h2></div>
+            <button id="addProject" class="primary" type="button">Add project</button>
+          </div>
+          <div id="projectList" class="projects"></div>
+          <p id="projectsEmpty" class="empty">No projects yet. Add a folder you want ChatGPT to be able to work in.</p>
+        </article>
+
+        <article class="card setup-card">
+          <div><p class="eyebrow">CHATGPT</p><h2>Use your normal ChatGPT account</h2></div>
+          <p class="muted-text">Sign in to ChatGPT normally in Chrome or Edge. The browser extension connects that conversation to this companion. For a connector that survives restarts, use a persistent OpenAI tunnel.</p>
+
+          <div class="connector-mode-row">
+            <label for="connectorMode">Connection</label>
+            <select id="connectorMode">
+              <option value="openai">Stable OpenAI tunnel (recommended)</option>
+              <option value="cloudflared">Temporary Cloudflare fallback</option>
+            </select>
+          </div>
+
+          <div id="stableTunnelSetup" class="connector-setup">
+            <div class="connector-field"><label for="openAiTunnelId">Tunnel ID</label><input id="openAiTunnelId" type="text" autocomplete="off" spellcheck="false" placeholder="tunnel_0123456789abcdef0123456789abcdef" /></div>
+            <div class="connector-field"><label for="openAiTunnelKey">Restricted tunnel API key</label><input id="openAiTunnelKey" type="password" autocomplete="off" placeholder="Paste once — stored by your operating system" /></div>
+            <p id="stableTunnelHint" class="fine-print">Create the tunnel in the OpenAI workspace you use with ChatGPT. Use a restricted API key with only the tunnel permissions it needs. The key authenticates the local tunnel transport; this path never uses Conteenua AI credits.</p>
+            <div class="button-row"><button id="saveStableTunnel" class="primary" type="button">Save stable connector</button><button id="clearTunnelKey" type="button">Clear stored key</button><button id="openOpenAiPlatform" type="button">Open OpenAI Platform</button></div>
+          </div>
+
+          <div id="temporaryTunnelSetup" class="connector-setup warning-setup" hidden>
+            <strong>Temporary fallback</strong>
+            <p class="fine-print">Cloudflare quick tunnels are useful for testing, but the public Server URL can rotate when Companion restarts. A ChatGPT developer plugin using that URL may need to be refreshed or recreated. Prefer the stable OpenAI tunnel above for normal use.</p>
+            <div class="button-row"><button id="useTemporaryTunnel" type="button">Use temporary fallback</button></div>
+          </div>
+
+          <div id="connectorSetup" class="connector-setup" hidden>
+            <div class="connector-row"><span>Connector name</span><strong id="coreConnectorName">Conteenua Companion Core</strong><button id="copyConnectorName" type="button">Copy</button></div>
+            <div class="connector-row"><span id="connectorEndpointLabel">Tunnel ID</span><code id="coreConnectorUrl">Save your stable tunnel first.</code><button id="copyConnectorUrl" type="button" disabled>Copy</button></div>
+            <p id="connectorSetupHint" class="fine-print">In ChatGPT Plugins → Create app, choose Tunnel, pick this tunnel, choose No Auth, then create the developer plugin. The browser bridge does not bypass plan or workspace limits.</p>
+          </div>
+          <div class="button-row"><button id="openExtension" type="button">Open extension folder</button><button id="connectTools" type="button">Connect local tools</button><button id="openChatGPT" type="button">Open ChatGPT</button><button id="openChatGPTPlugins" type="button">Open ChatGPT Plugins</button></div>
+        </article>
+
+        <footer>
+          <button id="legalNotices" class="link-button" type="button">Open-source licenses & notices</button>
+          <button id="signOutButton" class="link-button danger" type="button">Disconnect this Conteenua account</button>
+        </footer>
+      </section>
+    </main>
+    <script type="module" src="./companion.ts"></script>
+  </body>
+</html>
